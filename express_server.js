@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080;
 const cookieParser = require('cookie-parser');
 const bodyParser = require("body-parser");
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -30,27 +31,6 @@ const getIdByEmail = function(email) {
 };
 
 
-
-const urlDatabase = {
-  abc123:
-  {longURL: "http://www.lighthouselabs.ca",
-    userID: "dsdf32"},
-  cbd123:
-    {longURL: "http://www.google.com",
-      userID: "dsdf32"},
-  ghg123:
-      {longURL: "http://www.naver.com",
-        userID: "343fdf" }
-};
-
-const users = {
-  dsdf32: {
-    id: "djf376",
-    email: "e@e.com",
-    password: "123"
-  }
-};
-
 const urlsForUser = function(id) {
   const keys = Object.keys(urlDatabase);
   let keyobj = {};
@@ -62,7 +42,36 @@ const urlsForUser = function(id) {
   return keyobj;
 };
 
-  
+
+
+
+
+
+
+
+
+const urlDatabase = {
+  abc123:
+  {longURL: "http://www.lighthouselabs.ca",
+    userID: "dsdf32"},
+  cbd123:
+  {longURL: "http://www.google.com",
+    userID: "dsdf32"},
+  ghg123:
+  {longURL: "http://www.naver.com",
+    userID: "343fdf" }
+};
+
+const users = {
+  dsdf32: {
+    id: "djf376",
+    email: "e@e.com",
+    password: "123"
+  }
+};
+
+
+
 
 
 app.get("/", (req, res) => {
@@ -114,7 +123,6 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL,
     user: users[req.cookies.user_id]
   };
-  console.log(urlDatabase);
   res.render("urls_show", templateVars);
 });
   
@@ -145,7 +153,7 @@ app.post("/urls", (req, res) => {
   const userID = req.cookies.user_id;
   urlDatabase[shortURL] = {longURL,userID};
   res.redirect(`/urls/${shortURL}`);
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  res.send("Ok");
 });
 
 
@@ -159,7 +167,6 @@ app.post("/urls/:shortURL",(req, res) => {
   const id = req.params.shortURL;
   const newLongURL = req.body.longURL;
   urlDatabase[id].longURL = newLongURL;
-  // console.log(req.body.longURL);
   res.redirect('/urls');
 });
 
@@ -194,7 +201,6 @@ app.post("/register",(req,res) => {
   const id = generateRandomString(6);
   const user = {id,email,password};
   users[id] = user;
-  console.log(users);
   res.cookie("user_id",id);
   res.redirect('/urls');
 });
