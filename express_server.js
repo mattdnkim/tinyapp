@@ -22,7 +22,6 @@ const generateRandomString = function(n) {
 
 const getIdByEmail = function(email) {
   const keys = Object.keys(users);
-  console.log(keys);
   for (const id of keys) {
     if (users[id]["email"] === email) {
       return id;
@@ -41,14 +40,6 @@ const urlsForUser = function(id) {
   }
   return keyobj;
 };
-
-
-
-
-
-
-
-
 
 const urlDatabase = {
   abc123:
@@ -70,14 +61,14 @@ const users = {
   }
 };
 
-
-
-
-
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if (req.cookies.user_id) {
+    res.redirect('/urls');
+  }
+  if (!req.cookies.user_id) {
+    res.redirect('/login');
+  }
 });
-
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -92,6 +83,9 @@ app.get("/urls", (req, res) => {
   const templateVars = { urls: urlsForUser(id),
     user: users[id],
   };
+  if (!req.cookies.user_id) {
+    res.status(403).send("You are able to access after login");
+  }
   res.render("urls_index", templateVars);
 });
   
@@ -115,36 +109,58 @@ app.get("/register", (req, res) => {
   const id = req.cookies.user_id;
   const templateVars = { urls: urlsForUser(id),
     user: users[req.cookies.user_id]};
+  if (req.cookies.user_id) {
+    res.redirect('/urls');
+  }
   res.render("register",templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL,
+  const shortURL = req.params.shortURL;
+  req.body.longURL = urlDatabase[shortURL].longURL;
+  if (!req.cookies.user_id) {
+    res.status(403).send("You are able to access after login");
+  }
+ 
+  if (!urlDatabase[shortURL]) {
+    res.status(400).send("Page not found");
+  }
+
+  if (req.cookies.user_id !== urlDatabase[shortURL].userID) {
+    res.redirect('/urls');
+  }
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[shortURL].longURL,
     user: users[req.cookies.user_id]
   };
+  
   res.render("urls_show", templateVars);
 });
-  
-  
-app.get("/login",(req, res) => {
-  const id = req.cookies.user_id;
-  const templateVars = { urls: urlsForUser(id),
-    user: users[req.cookies.user_id]};
-  res.render("login",templateVars);
-});
-  
-  
+
 app.get("/u/:shortURL",(req, res) => {
   const shortURL = req.params.shortURL;
   if (!urlDatabase[shortURL]) {
-    res.status(400).send("no page found");
+    res.status(400).send("Page not found");
+  }
+  if (!req.cookies.user_id) {
+    res.status(403).send("You are able to access after login");
   }
   const assignedLongURL = urlDatabase[shortURL].longURL;
   if (assignedLongURL) {
     res.redirect(assignedLongURL);
   }
 });
+  
+app.get("/login",(req, res) => {
+  const id = req.cookies.user_id;
+  const templateVars = { urls: urlsForUser(id),
+    user: users[req.cookies.user_id]};
+  if (req.cookies.user_id) {
+    res.redirect('/urls');
+  }
+  res.render("login",templateVars);
+});
+  
+  
   
 
 app.post("/urls", (req, res) => {
@@ -190,10 +206,12 @@ app.post("/logout",(req, res) => {
 });
 
 app.post("/register",(req,res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  if (email === "" || password === "") {
-    res.status(400).send("Please fill up the form");
+  let email = req.body.email;
+  let password = req.body.password;
+  if (!email.length || !password.length) {
+    email = undefined;
+    password = undefined;
+    res.status(400).send("Please fill up the form").end();
   }
   if (getIdByEmail(email)) {
     res.status(400).send("There is an existing email");
