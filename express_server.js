@@ -2,44 +2,15 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 const cookieParser = require('cookie-parser');
-const bodyParser = require("body-parser");
+const bodyParser = require('body-parser');
+const { getIdByEmail } = require('./helper')
+const { generateRandomString } = require('./helper');
+const { urlsForUser } = require('./helper');
 
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.set("view engine", "ejs");
-
-
-
-const generateRandomString = function(n) {
-  let randomString           = '';
-  let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < n; i++) {
-    randomString += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return randomString;
-};
-
-const getIdByEmail = function(email) {
-  const keys = Object.keys(users);
-  for (const id of keys) {
-    if (users[id]["email"] === email) {
-      return id;
-    }
-  }
-};
-
-
-const urlsForUser = function(id) {
-  const keys = Object.keys(urlDatabase);
-  let keyobj = {};
-  for (const key of keys) {
-    if (urlDatabase[key]["userID"] === id) {
-      keyobj[key] = urlDatabase[key];
-    }
-  }
-  return keyobj;
-};
 
 const urlDatabase = {
   abc123:
@@ -89,7 +60,6 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
   
-
 app.get("/urls/new", (req, res) => {
   const id = req.cookies.user_id;
   const templateVars = { urls: urlsForUser(id),
@@ -101,9 +71,6 @@ app.get("/urls/new", (req, res) => {
   }
   res.render("urls_new", templateVars);
 });
-
-  
-
 
 app.get("/register", (req, res) => {
   const id = req.cookies.user_id;
