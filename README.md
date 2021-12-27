@@ -5,6 +5,9 @@
 1.Tiny app provides shortened URL addresses to the user  
 2.With the short URL link, the user can access to the websites.  
 
+# How to set up
+1.npm install from the root to download dependencies
+2.npm start
 
 # How to use
 
