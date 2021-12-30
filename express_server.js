@@ -4,7 +4,7 @@ const PORT = 8080;
 const { redirect } = require('express/lib/response');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session')
-const { getIdByEmail } = require('./helper')
+const { getIdByEmail } = require('./helper') //This can grab the 6digit alphanumeric id for cookie by user's email
 const { generateRandomString } = require('./helper');
 const { urlsForUser } = require('./helper');
 const bcrypt = require('bcryptjs');
@@ -35,7 +35,7 @@ app.get('/hello', (req, res) => {
 
 app.get('/urls', (req, res) => {
   const id = req.session.user_id;
-  const templateVars = { 
+  const templateVars = { //object to render to html
     urls: urlsForUser(id, urlDatabase),
     user: users[id],
   };
@@ -50,7 +50,7 @@ app.get('/urls/new', (req, res) => {
     res.redirect('/login')
   }
   const id = req.session.user_id;
-  const templateVars = { 
+  const templateVars = { //object to render to html
     urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]
   };
@@ -63,7 +63,7 @@ app.get('/urls/new', (req, res) => {
 
 app.get('/register', (req, res) => {
   const id = req.session.user_id;
-  const templateVars = { 
+  const templateVars = { //object to render to html
     urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]};
   if (req.session.user_id) {
@@ -86,7 +86,7 @@ app.get('/urls/:shortURL', (req, res) => {
   if (req.session.user_id !== urlDatabase[shortURL].userID) {
     res.redirect('/urls');
   }
-  const templateVars = { 
+  const templateVars = { //object to render to html
     shortURL: req.params.shortURL, 
     longURL: urlDatabase[shortURL].longURL,
     user: users[req.session.user_id]
@@ -108,7 +108,7 @@ app.get('/u/:shortURL',(req, res) => {
 
 app.get('/login',(req, res) => {
   const id = req.session.user_id;
-  const templateVars = { 
+  const templateVars = { //object to render to html
     urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]};
   if (req.session.user_id) {

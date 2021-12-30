@@ -1,6 +1,6 @@
 
 
-const getIdByEmail = function(email, users) {
+const getIdByEmail = function(email, users) {//This can grab the 6digit alphanumeric id for cookie by user's email
   const keys = Object.keys(users);
   for (const id of keys) {
     if (users[id]['email'] === email) {
