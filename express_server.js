@@ -34,13 +34,11 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  console.log(req.session.user_id)
   const id = req.session.user_id;
   const templateVars = { 
     urls: urlsForUser(id, urlDatabase),
     user: users[id],
   };
-  console.log('in urls', users, id, templateVars)
   if (!req.session.user_id) {
     res.status(403).send('You are able to access after login');
   }
@@ -78,7 +76,6 @@ app.get('/urls/:shortURL', (req, res) => {
   if (!req.session.user_id) {
     res.status(403).send('You are able to access after login');
   }
-  console.log('shorturl',users)
   const shortURL = req.params.shortURL;
   req.body.longURL = urlDatabase[shortURL].longURL;
  
@@ -162,7 +159,6 @@ app.post('/login',(req, res) => {
   } else if (bcrypt.compareSync(password, users[id]['password'])) { 
     res.status(403).send("Password isn't correct");
   }
-  console.log(users[id]['password'])
   req.session.user_id = id
   res.redirect('/urls');
 });

@@ -19,7 +19,6 @@ const generateRandomString = function(n) {
 };
 
 const urlsForUser = function(id,urlDatabase) {
-  console.log('db', urlDatabase)
   const keys = Object.keys(urlDatabase);
   let keyobj = {};
   for (const key of keys) {
