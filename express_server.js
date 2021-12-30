@@ -120,9 +120,6 @@ app.get("/login",(req, res) => {
   res.render("login",templateVars);
 });
   
-  
-  
-
 app.post("/urls", (req, res) => {
   if (!req.session.user_id) {
     res.status(403).send("You are able to access after login");
@@ -134,7 +131,6 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
   res.send("Ok");
 });
-
 
 app.post("/urls/:shortURL/delete",(req, res) => {
   if (!req.session.user_id) {
