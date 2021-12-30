@@ -1,4 +1,6 @@
-const getIdByEmail = function(email) {
+
+
+const getIdByEmail = function(email, users) {
   const keys = Object.keys(users);
   for (const id of keys) {
     if (users[id]["email"] === email) {
@@ -16,7 +18,8 @@ const generateRandomString = function(n) {
   return randomString;
 };
 
-const urlsForUser = function(id) {
+const urlsForUser = function(id,urlDatabase) {
+  console.log('db', urlDatabase)
   const keys = Object.keys(urlDatabase);
   let keyobj = {};
   for (const key of keys) {
@@ -27,4 +30,4 @@ const urlsForUser = function(id) {
   return keyobj;
 };
 
-module.exports = {getIdByEmail,generateRandomString,urlsForUser};
+module.exports = { getIdByEmail,generateRandomString,urlsForUser };
