@@ -36,7 +36,8 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   console.log(req.session.user_id)
   const id = req.session.user_id;
-  const templateVars = { urls: urlsForUser(id, urlDatabase),
+  const templateVars = { 
+    urls: urlsForUser(id, urlDatabase),
     user: users[id],
   };
   console.log('in urls', users, id, templateVars)
@@ -51,7 +52,8 @@ app.get("/urls/new", (req, res) => {
     res.redirect('/login')
   }
   const id = req.session.user_id;
-  const templateVars = { urls: urlsForUser(id, urlDatabase),
+  const templateVars = { 
+    urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]
   };
   const cookie = req.session.user_id;
@@ -63,7 +65,8 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/register", (req, res) => {
   const id = req.session.user_id;
-  const templateVars = { urls: urlsForUser(id, urlDatabase),
+  const templateVars = { 
+    urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]};
   if (req.session.user_id) {
     res.redirect('/urls');
@@ -86,7 +89,9 @@ app.get("/urls/:shortURL", (req, res) => {
   if (req.session.user_id !== urlDatabase[shortURL].userID) {
     res.redirect('/urls');
   }
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[shortURL].longURL,
+  const templateVars = { 
+    shortURL: req.params.shortURL, 
+    longURL: urlDatabase[shortURL].longURL,
     user: users[req.session.user_id]
   };
   
@@ -106,7 +111,8 @@ app.get("/u/:shortURL",(req, res) => {
 
 app.get("/login",(req, res) => {
   const id = req.session.user_id;
-  const templateVars = { urls: urlsForUser(id, urlDatabase),
+  const templateVars = { 
+    urls: urlsForUser(id, urlDatabase),
     user: users[req.session.user_id]};
   if (req.session.user_id) {
     res.redirect('/urls');
