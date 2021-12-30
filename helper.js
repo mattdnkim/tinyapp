@@ -3,7 +3,7 @@
 const getIdByEmail = function(email, users) {
   const keys = Object.keys(users);
   for (const id of keys) {
-    if (users[id]["email"] === email) {
+    if (users[id]['email'] === email) {
       return id;
     }
   }
@@ -23,7 +23,7 @@ const urlsForUser = function(id,urlDatabase) {
   const keys = Object.keys(urlDatabase);
   let keyobj = {};
   for (const key of keys) {
-    if (urlDatabase[key]["userID"] === id) {
+    if (urlDatabase[key]['userID'] === id) {
       keyobj[key] = urlDatabase[key];
     }
   }
