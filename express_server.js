@@ -84,7 +84,7 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 
   if (req.session.user_id !== urlDatabase[shortURL].userID) {
-    res.redirect("/urls");
+    res.status(403).send("You are not be able to access");
   }
   const templateVars = { //object to render to html
     shortURL: req.params.shortURL, 
@@ -193,6 +193,3 @@ app.post("/register",(req,res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
-
-
