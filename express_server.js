@@ -154,10 +154,10 @@ app.post("/login",(req, res) => {
   const password = req.body.password;
   let id = getIdByEmail(email, users);
   if (!id) {
-    res.status(403).send("Email doesn't exist");
+    return res.status(403).send("Email doesn't exist");
     
-  } else if (bcrypt.compareSync(password, users[id]["password"])) { 
-    res.status(403).send("Password isn't correct");
+  } else if (!bcrypt.compareSync(password, users[id]["password"])) { 
+    return res.status(403).send("Password isn't correct");
   }
   req.session.user_id = id
   res.redirect("/urls");
